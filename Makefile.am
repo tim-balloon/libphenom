@@ -33,6 +33,7 @@ libphenom_la_SOURCES = \
 	corelib/nbio/portfs.c \
 	corelib/job.c \
 	corelib/string.c \
+	corelib/serial.c \
 	corelib/net/listener.c \
 	corelib/net/sockaddr.c \
 	corelib/net/socket.c \

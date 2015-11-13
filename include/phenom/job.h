@@ -182,8 +182,8 @@ struct ph_job {
   // Hashed over the scheduler threads; two jobs with
   // the same emitter hash will run serially wrt. each other
   uint32_t emitter_affinity;
-  // For nbio, the socket we're bound to for IO events
-  ph_socket_t fd;
+  // For nbio, the descriptor we're bound to for IO events
+  int fd;
   // Holds timeout state
   struct ph_timerwheel_timer timer;
   // When targeting a thread pool, which pool
