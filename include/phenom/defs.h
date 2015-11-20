@@ -33,7 +33,9 @@
 # define _REENTRANT
 #endif
 #define __EXTENSIONS__ 1
-#define _BSD_SOURCE
+#ifndef _BSD_SOURCE
+# define _BSD_SOURCE
+#endif
 #ifdef __sun__
 #define _XOPEN_SOURCE 600
 #define _POSIX_C_SOURCE 200112L
@@ -41,8 +43,12 @@
 #define _XOPEN_SOURCE 700
 #define _POSIX_C_SOURCE 200809
 #endif
-#define _GNU_SOURCE
-#define _DARWIN_C_SOURCE
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
+#ifndef _DARWIN_C_SOURCE
+# define _DARWIN_C_SOURCE
+#endif
 
 // Ensure that PRIu32 and friends get defined for both C99
 // and C++ consumers of libphenom
