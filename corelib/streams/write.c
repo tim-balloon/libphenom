@@ -207,7 +207,8 @@ bool ph_stm_write(ph_stream_t *stm, const void *buf,
   ph_stm_lock(stm);
   stm->last_err = 0;
   if (count == 0) {
-    *nwrote = 0;
+    if(nwrote)
+        *nwrote = 0;
     ph_stm_unlock(stm);
     return true;
   }
