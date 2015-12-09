@@ -111,7 +111,6 @@ struct ph_serial {
   // The defines needed for this serial object
   char              path[PATH_MAX];
   struct termios    term;
-  void              *priv;
 };
 
 

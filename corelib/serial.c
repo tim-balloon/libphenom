@@ -299,7 +299,7 @@ ph_serial_t *ph_serial_open(const char *m_name,
   strncpy(serial->path, m_name, sizeof(serial->path));
   serial->job.fd = fd;
   serial->timeout_duration.tv_sec = 60;
-  serial->priv = arg;
+  serial->job.data = arg;
 
   tcsetattr(serial->job.fd, TCSANOW, &serial->term);
 
