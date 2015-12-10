@@ -38,10 +38,14 @@
 #endif
 #ifdef __sun__
 #define _XOPEN_SOURCE 600
-#define _POSIX_C_SOURCE 200112L
+#ifndef _POSIX_C_SOURCE
+# define _POSIX_C_SOURCE 200112L
+#endif
 #else
 #define _XOPEN_SOURCE 700
-#define _POSIX_C_SOURCE 200809
+#ifndef _POSIX_C_SOURCE
+# define _POSIX_C_SOURCE 200809L
+#endif
 #endif
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
