@@ -704,6 +704,28 @@ static uint64_t find_record(ph_bufq_t *q, const char *delim, uint32_t delim_len,
   return 0;
 }
 
+
+bool ph_bufq_discard_until(ph_bufq_t *q, const char *delim,
+    uint32_t delim_len)
+{
+    uint64_t len;
+    bool overflow = 0;
+    bool found = 0;
+    ph_buf_t *discard = NULL;
+
+    len = find_record(q, delim, delim_len, &overflow);
+    if (len) {
+        found = 1;
+        if (len > delim_len) {
+            discard = ph_bufq_consume_bytes(q, len - delim_len);
+            ph_buf_delref(discard);
+        }
+    }
+
+    return found;
+
+}
+
 ph_buf_t *ph_bufq_consume_record(ph_bufq_t *q, const char *delim,
     uint32_t delim_len)
 {

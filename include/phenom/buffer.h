@@ -222,6 +222,20 @@ ph_buf_t *ph_bufq_consume_bytes(ph_bufq_t *q, uint64_t len);
  */
 ph_buf_t *ph_bufq_peek_bytes(ph_bufq_t *q, uint64_t len);
 
+/** Attempts to discard all bytes prior to a start sequence
+ *
+ * Searches the buffer queue until it finds the delimiter text.
+ * If the delimiter text is not found, returns false.
+ *
+ * If the delimiter text is found, it discards all data in the
+ * buffer queue up to -- but not including -- the delimiter
+ * sequence.  This allows us to set the start of the buffer to
+ * a known sequence of starting bytes.
+ *
+ */
+bool ph_bufq_discard_until(ph_bufq_t *q, const char *delim,
+    uint32_t delim_len);
+
 /** Attempts to de-queue a record from a buffer queue
  *
  * Searches the buffer queue until it finds the delimiter text.
