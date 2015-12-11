@@ -400,9 +400,9 @@ int ph_serial_setspeed(ph_serial_t *m_serial, speed_t m_speed)
     }
 
     if (m_serial->job.fd != -1) {
-        tcsetattr(m_serial->job.fd, TCSADRAIN, &m_serial->term);
+        return tcsetattr(m_serial->job.fd, TCSADRAIN, &m_serial->term);
     }
-    return true;
+    return -1;
 }
 
 ph_buf_t *ph_serial_read_bytes_exact(ph_serial_t *m_serial, uint64_t len)
