@@ -345,7 +345,7 @@ void ph_serial_enable(ph_serial_t *m_serial, bool enable)
 int ph_serial_set_baud_base(ph_serial_t *m_serial, int m_base) {
     struct serial_struct ss;
     if (ioctl(m_serial->job.fd, TIOCGSERIAL, &ss) != 0) {
-        m_serial->stream->last_err = errno;
+        m_serial->conn->last_err = errno;
         return -1;
     }
 
@@ -355,7 +355,7 @@ int ph_serial_set_baud_base(ph_serial_t *m_serial, int m_base) {
         ph_log(PH_LOG_DEBUG, "fd=%d setting baud base=%d error=%s",
                 m_serial->job.fd, m_base, strerror(errno));
 
-        m_serial->stream->last_err = errno;
+        m_serial->conn->last_err = errno;
         return -1;
     }
     return 0;
@@ -386,7 +386,7 @@ int ph_serial_set_baud_divisor(ph_serial_t *m_serial, int m_speed) {
     if (ioctl(m_serial->job.fd, TIOCSSERIAL, &ss)) {
         ph_log(PH_LOG_DEBUG, "fd=%d setting speed=%d error=%s",
             m_serial->job.fd, m_speed, strerror(errno));
-        m_serial->stream->last_err = errno;
+        m_serial->conn->last_err = errno;
         return -1;
     }
     return 0;
@@ -400,7 +400,7 @@ int ph_serial_setspeed(ph_serial_t *m_serial, speed_t m_speed)
     }
 
     if (m_serial->job.fd != -1) {
-        return tcsetattr(m_serial->job.fd, TCSADRAIN, &m_serial->term);
+        return tcsetattr(m_serial->job.fd, TCSANOW, &m_serial->term);
     }
     return -1;
 }
