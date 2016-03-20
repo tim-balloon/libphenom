@@ -786,7 +786,9 @@ bool ph_bufq_stm_write(ph_bufq_t *q, ph_stream_t *stm, uint64_t *nwrotep)
   }
 
   if (nio == 0) {
-    *nwrotep = 0;
+    if (nwrotep) {
+      *nwrotep = 0;
+    }
     return true;
   }
 
