@@ -648,9 +648,10 @@ static uint64_t find_record(ph_bufq_t *q, const char *delim, uint32_t delim_len,
     slen = partial_match(ent, delim, delim_len);
     if (slen) {
       uint32_t dlen = delim_len - slen;
+      uint32_t nlen = next->wpos - next->rpos;
       bstart = ph_buf_mem(next->buf) + next->rpos;
 
-      if (len < slen) {
+      if (nlen < slen) {
         // Not found, nor findable.
         // Consider this case:
         // |8192|1|8192|
