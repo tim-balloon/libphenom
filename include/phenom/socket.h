@@ -40,6 +40,7 @@ extern "C" {
 /** Represents a socket address */
 struct phenom_sockaddr {
   sa_family_t family;
+  int protocol;
   union {
     struct sockaddr sa;
     struct sockaddr_un nix;

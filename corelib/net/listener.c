@@ -142,7 +142,11 @@ ph_result_t ph_listener_bind(ph_listener_t *lstn, const ph_sockaddr_t *addr)
   if (lstn->job.fd == -1) {
     int on = 1;
 
-    lstn->job.fd = ph_socket_for_addr(addr, SOCK_STREAM, lstn->flags);
+    if (addr->protocol == IPPROTO_UDP) {
+        lstn->job.fd = ph_socket_for_addr(addr, SOCK_DGRAM, lstn->flags);
+    } else {
+        lstn->job.fd = ph_socket_for_addr(addr, SOCK_STREAM, lstn->flags);
+    }
     if (lstn->job.fd == -1) {
       return PH_ERR;
     }

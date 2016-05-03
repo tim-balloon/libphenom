@@ -61,7 +61,7 @@ ph_socket_t ph_socket_for_addr(const ph_sockaddr_t *addr, int type, int flags)
 {
   ph_socket_t s;
 
-  s = socket(addr->family, type, 0);
+  s = socket(addr->family, type, addr->protocol);
   if (s == -1) {
     return s;
   }

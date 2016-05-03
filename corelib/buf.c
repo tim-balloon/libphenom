@@ -648,10 +648,9 @@ static uint64_t find_record(ph_bufq_t *q, const char *delim, uint32_t delim_len,
     slen = partial_match(ent, delim, delim_len);
     if (slen) {
       uint32_t dlen = delim_len - slen;
-      uint32_t nlen = next->wpos - next->rpos;
       bstart = ph_buf_mem(next->buf) + next->rpos;
 
-      if (nlen < slen) {
+      if (len < slen) {
         // Not found, nor findable.
         // Consider this case:
         // |8192|1|8192|
@@ -724,7 +723,6 @@ bool ph_bufq_discard_until(ph_bufq_t *q, const char *delim,
     }
 
     return found;
-
 }
 
 ph_buf_t *ph_bufq_consume_record(ph_bufq_t *q, const char *delim,
@@ -786,9 +784,7 @@ bool ph_bufq_stm_write(ph_bufq_t *q, ph_stream_t *stm, uint64_t *nwrotep)
   }
 
   if (nio == 0) {
-    if (nwrotep) {
-      *nwrotep = 0;
-    }
+    *nwrotep = 0;
     return true;
   }
 
