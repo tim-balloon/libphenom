@@ -26,7 +26,7 @@ static struct addr_test {
   const char *expect;
   int result;
 } addr_tests[] = {
-  { "a.test.phenom.wezfurlong.org", "80", "[127.0.0.4]:80", 0 },
+  { "google-public-dns-a.google.com", "53", "[8.8.8.8]:53", 0 },
   { "aaaa.test.phenom.wezfurlong.org", "80", "[::a:a:a:a]:80", 0 },
   { "bbbb.test.phenom.wezfurlong.org", "80", NULL, EAI_NONAME },
 };
@@ -44,9 +44,10 @@ static void check_addrinfo_result(ph_dns_addrinfo_t *info)
 
   is(info->result, t->result);
   if (info->result) {
-    ok(1, "%s: expected fail: '%s' got '%s'",
+    ok(1, "%s: expected fail: %d:'%s' got %d:'%s'",
         t->node,
-        gai_strerror(t->result), gai_strerror(info->result));
+        t->result, gai_strerror(t->result),
+        info->result, gai_strerror(info->result));
   } else {
     ph_sockaddr_set_from_addrinfo(&sa, info->ai);
     ph_sockaddr_print(&sa, &str, true);
