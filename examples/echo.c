@@ -204,8 +204,8 @@ int main(int argc, char **argv)
   }
 
   // Set up the address that we're going to listen on
-  if ((use_v4 && ph_sockaddr_set_v4(&addr, addrstring, portno) != PH_OK) ||
-      (!use_v4 && ph_sockaddr_set_v6(&addr, addrstring, portno) != PH_OK)) {
+  if ((use_v4 && ph_sockaddr_set_v4(&addr, addrstring, 0, portno) != PH_OK) ||
+      (!use_v4 && ph_sockaddr_set_v6(&addr, addrstring, 0, portno) != PH_OK)) {
     ph_fdprintf(STDERR_FILENO,
         "Invalid address [%s]:%d",
         addrstring ? addrstring : "*",

@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     ph_sockaddr_t sa;
     PH_STRING_DECLARE_GROW(str, 128, mt_misc);
 
-    is(ph_sockaddr_set_v4(&sa, NULL, 42), PH_OK);
+    is(ph_sockaddr_set_v4(&sa, NULL, IPPROTO_TCP, 42), PH_OK);
     is(ph_sockaddr_print(&sa, &str, true), PH_OK);
     ok(ph_string_equal_cstr(&str, "[0.0.0.0]:42"), "printed with port");
     ph_string_reset(&str);
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     ok(ph_string_equal_cstr(&str, "0.0.0.0"), "printed no port");
 
     ph_string_reset(&str);
-    is(ph_sockaddr_set_v4(&sa, "10.11.12.13", 1337), PH_OK);
+    is(ph_sockaddr_set_v4(&sa, "10.11.12.13", IPPROTO_TCP, 1337), PH_OK);
     is(ph_sockaddr_print(&sa, &str, true), PH_OK);
     ok(ph_string_equal_cstr(&str, "[10.11.12.13]:1337"), "printed with port");
     ph_string_reset(&str);
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     ok(ph_string_equal_cstr(&str, "10.11.12.13"), "printed no port");
 
     ph_string_reset(&str);
-    is(ph_sockaddr_set_v6(&sa, NULL, 42), PH_OK);
+    is(ph_sockaddr_set_v6(&sa, NULL, IPPROTO_TCP, 42), PH_OK);
     is(ph_sockaddr_print(&sa, &str, true), PH_OK);
     ok(ph_string_equal_cstr(&str, "[::]:42"), "printed with port");
     ph_string_reset(&str);
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     ok(ph_string_equal_cstr(&str, "::"), "printed no port");
 
     ph_string_reset(&str);
-    is(ph_sockaddr_set_v6(&sa, "::1", 1337), PH_OK);
+    is(ph_sockaddr_set_v6(&sa, "::1", IPPROTO_TCP, 1337), PH_OK);
     is(ph_sockaddr_print(&sa, &str, true), PH_OK);
     ok(ph_string_equal_cstr(&str, "[::1]:1337"), "printed with port");
     ph_string_reset(&str);

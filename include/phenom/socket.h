@@ -76,7 +76,7 @@ static inline int ph_sockaddr_socklen(const ph_sockaddr_t *addr) {
  * If addr == NULL, then sa is initialized to INADDR_ANY
  * */
 ph_result_t ph_sockaddr_set_v4(ph_sockaddr_t *sa,
-    const char *addr, uint16_t port);
+    const char *addr, uint16_t protocol, uint16_t port);
 
 /** Set a sockaddr to the specified IPv6 address string and port.
  * The address string must be an IPv6 address.  This function
@@ -90,6 +90,7 @@ ph_result_t ph_sockaddr_set_v4(ph_sockaddr_t *sa,
 ph_result_t ph_sockaddr_set_v6(
     ph_sockaddr_t *sa,
     const char *addr,
+    uint16_t protocol,
     uint16_t port);
 
 /** Set a sockaddr to the specified UNIX domain address.
@@ -117,6 +118,9 @@ ph_result_t ph_sockaddr_set_from_hostent(
 
 /** Set the port number of a sockaddr */
 void ph_sockaddr_set_port(ph_sockaddr_t *addr, uint16_t port);
+
+/** Set the IP protocol for the socket */
+void ph_sockaddr_set_protocol(ph_sockaddr_t *sa, uint16_t protocol);
 
 /** Print a human readable version of a sockaddr to a string */
 ph_result_t ph_sockaddr_print(ph_sockaddr_t *addr,
@@ -348,8 +352,8 @@ typedef void (*ph_sock_connect_func)(
  * a default value will be used.
  */
 void ph_sock_resolve_and_connect(const char *name, uint16_t port,
-    struct timeval *timeout, int resolver, ph_sock_connect_func func,
-    void *arg);
+    uint16_t protocol, struct timeval *timeout, int resolver,
+    ph_sock_connect_func func, void *arg);
 
 #define PH_SOCK_SHUT_RD   0
 #define PH_SOCK_SHUT_WR   1

@@ -608,8 +608,13 @@ static void connected_sock(ph_socket_t s, const ph_sockaddr_t *addr,
 
 static void attempt_connect(struct resolve_and_connect *rac)
 {
-  rac->s = ph_socket_for_addr(&rac->addr, SOCK_STREAM,
-      PH_SOCK_CLOEXEC|PH_SOCK_NONBLOCK);
+  if (rac->addr.protocol == IPPROTO_UDP) {
+      rac->s = ph_socket_for_addr(&rac->addr, SOCK_DGRAM,
+          PH_SOCK_CLOEXEC|PH_SOCK_NONBLOCK);
+  } else {
+      rac->s = ph_socket_for_addr(&rac->addr, SOCK_STREAM,
+          PH_SOCK_CLOEXEC|PH_SOCK_NONBLOCK);
+  }
 
   if (rac->s == -1) {
     calc_elapsed(rac);
@@ -642,7 +647,7 @@ static void did_sys_resolve(ph_dns_addrinfo_t *info)
 }
 
 void ph_sock_resolve_and_connect(const char *name, uint16_t port,
-    struct timeval *timeout,
+    uint16_t protocol, struct timeval *timeout,
     int resolver, ph_sock_connect_func func, void *arg)
 {
   struct timeval tv = {0, 0};
@@ -674,8 +679,8 @@ void ph_sock_resolve_and_connect(const char *name, uint16_t port,
     rac->timeout.tv_sec = 60;
   }
 
-  if (ph_sockaddr_set_v4(&rac->addr, name, port) == PH_OK ||
-      ph_sockaddr_set_v6(&rac->addr, name, port) == PH_OK) {
+  if (ph_sockaddr_set_v4(&rac->addr, name, protocol, port) == PH_OK ||
+      ph_sockaddr_set_v6(&rac->addr, name, protocol, port) == PH_OK) {
     // No need to resolve this address; it's a literal
     attempt_connect(rac);
     return;

@@ -190,7 +190,7 @@ int main(int argc, char **argv)
   }
 
   ph_nbio_init(0);
-  ph_sock_resolve_and_connect(addrstring, portno,
+  ph_sock_resolve_and_connect(addrstring, portno, IPPROTO_IP,
       NULL, PH_SOCK_CONNECT_RESOLVE_SYSTEM,
       connected, NULL);
 

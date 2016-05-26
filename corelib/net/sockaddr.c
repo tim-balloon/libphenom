@@ -40,11 +40,12 @@ PH_TYPE_FORMATTER_FUNC(sockaddr)
 }
 
 ph_result_t ph_sockaddr_set_v4(ph_sockaddr_t *sa,
-    const char *addr, uint16_t port)
+    const char *addr, uint16_t protocol, uint16_t port)
 {
   int res = 1;
 
   memset(sa, 0, sizeof(*sa));
+  sa->protocol = protocol;
   if (addr) {
     res = inet_pton(AF_INET, addr, &sa->sa.v4.sin_addr);
   }
@@ -77,15 +78,22 @@ void ph_sockaddr_set_port(ph_sockaddr_t *sa, uint16_t port)
   }
 }
 
+void ph_sockaddr_set_protocol(ph_sockaddr_t *sa, uint16_t protocol)
+{
+    sa->protocol = protocol;
+}
+
 ph_result_t ph_sockaddr_set_v6(
     ph_sockaddr_t *sa,
     const char *addr,
+    uint16_t protocol,
     uint16_t port)
 {
   int res = 1;
   struct addrinfo *ai, hints;
 
   memset(sa, 0, sizeof(*sa));
+  sa->protocol = protocol;
   if (!addr) {
     /* the memset above zeroes the struct, which is the same
      * bit pattern as the any address
