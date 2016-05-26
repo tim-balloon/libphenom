@@ -33,8 +33,8 @@
 # define _REENTRANT
 #endif
 #define __EXTENSIONS__ 1
-#ifndef _BSD_SOURCE
-# define _BSD_SOURCE
+#ifndef _DEFAULT_SOURCE
+# define _DEFAULT_SOURCE
 #endif
 #ifdef __sun__
 #define _XOPEN_SOURCE 600
