@@ -66,6 +66,12 @@ ph_socket_t ph_socket_for_addr(const ph_sockaddr_t *addr, int type, int flags)
     return s;
   }
 
+  if (type == SOCK_DGRAM) {
+	  if (bind(s, &addr->sa.sa, ph_sockaddr_socklen(addr)) == -1) {
+		  return -1;
+	  }
+  }
+
   if (flags & PH_SOCK_CLOEXEC) {
     fcntl(s, F_SETFD, FD_CLOEXEC);
   }
