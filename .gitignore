@@ -43,3 +43,5 @@ docs/declmap.js
 libphenom.pc
 examples/echo
 examples/sclient
+/.cproject
+/.project
