@@ -123,7 +123,11 @@ static void sock_dtor(ph_job_t *job)
     sock->sslwbuf = NULL;
   }
   if (sock->ssl) {
+#if OPENSSL_VERSION_NUMBER < 0x10100001L
     SSL_CTX *ctx = sock->ssl->ctx;
+#else
+    SSL_CTX *ctx = SSL_get_SSL_CTX(sock->ssl);
+#endif
 
     if (sock->ssl_stream) {
       ph_stm_close(sock->ssl_stream);

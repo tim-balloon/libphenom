@@ -23,7 +23,7 @@
 static int bio_bufq_write(BIO *h, const char *buf, int size)
 {
   uint64_t n;
-  ph_bufq_t *q = h->ptr;
+  ph_bufq_t *q = BIO_get_data(h);
 
   BIO_clear_retry_flags(h);
   if (ph_bufq_append(q, buf, size, &n) != PH_OK) {
@@ -61,10 +61,9 @@ static long bio_bufq_ctrl(BIO *h, int cmd, // NOLINT(runtime/int)
 
 static int bio_bufq_new(BIO *h)
 {
-  h->init = 0;
-  h->num = 0;
-  h->ptr = NULL;
-  h->flags = 0;
+  BIO_set_init(h, 0);
+  BIO_set_data(h, NULL);
+  BIO_set_flags(h, 0);
   return 1;
 }
 
@@ -74,13 +73,14 @@ static int bio_bufq_free(BIO *h)
     return 0;
   }
 
-  h->ptr = NULL;
-  h->init = 0;
-  h->flags = 0;
+  BIO_set_init(h, 0);
+  BIO_set_data(h, NULL);
+  BIO_set_flags(h, 0);
 
   return 1;
 }
 
+#if OPENSSL_VERSION_NUMBER < 0x10100001L
 static BIO_METHOD method_bufq = {
   // See bio_stream.c
   81 | BIO_TYPE_SOURCE_SINK,
@@ -94,18 +94,44 @@ static BIO_METHOD method_bufq = {
   bio_bufq_free,
   NULL, /* no callback ctrl */
 };
+#else
+static BIO_METHOD *method_bufq;
+static int bio_method_init(void) {
+  if (!method_bufq) {
+    return 0;
+  }
+  method_bufq = BIO_meth_new(80 /* 'P' */
+			     | BIO_TYPE_SOURCE_SINK, "phenom-stream");
+  if (method_bufq == 0
+      || !BIO_meth_set_write(method_bufq, bio_bufq_write)
+      || !BIO_meth_set_read(method_bufq, bio_bufq_read)
+      || !BIO_meth_set_puts(method_bufq, bio_bufq_puts)
+      || !BIO_meth_set_ctrl(method_bufq, bio_bufq_ctrl)
+      || !BIO_meth_set_create(method_bufq, bio_bufq_new)
+      || !BIO_meth_set_destroy(method_bufq, bio_bufq_free)) {
+      BIO_meth_free(method_bufq);
+      return 0;
+    }
+  return 1;
+}
+#endif
 
 BIO *ph_openssl_bio_wrap_bufq(ph_bufq_t *bufq)
 {
   BIO *h;
 
+#if OPENSSL_VERSION_NUMBER < 0x10100001L
   h = BIO_new(&method_bufq);
+#else
+  bio_method_init();
+  h = BIO_new(method_bufq);
+#endif
   if (!h) {
     return NULL;
   }
 
-  h->ptr = bufq;
-  h->init = 1;
+  BIO_set_data(h, bufq);
+  BIO_set_init(h, 1);
   return h;
 }
 

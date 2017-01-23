@@ -35,6 +35,17 @@
 extern "C" {
 #endif
 
+/* OpenSSL 1.0.2 compatibility */
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#define BIO_get_init(x)                  (x->init)
+#define BIO_set_init(x, v)               (x->init = v)
+#define BIO_set_flags(x, v)              (x->flags = v)
+#define BIO_get_flags(x)                 (x->flags)
+#define BIO_get_data(x)                  (x->ptr)
+#define BIO_set_data(x, v)               (x->ptr = v)
+#define BIO_set_shutdown(x, v)           (x->shutdown = v)
+#endif /* OPENSSL_VERSION_NUMBER < 0x10100000L */
+
 /** Initialize multi-threaded OpenSSL for the process
  *
  * If you are building an application that owns the process, as opposed

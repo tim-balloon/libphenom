@@ -21,6 +21,7 @@
 #include "phenom/stream.h"
 #include "phenom/openssl.h"
 
+#if OPENSSL_VERSION_NUMBER < 0x10100001L
 struct CRYPTO_dynlock_value {
   pthread_rwlock_t lock;
 };
@@ -89,18 +90,22 @@ static void crypto_lock_cb(int mode, int type, const char *file, int line)
 {
   crypto_dynlock_lock(mode, crypto_locks[type], file, line);
 }
+#endif
 
 void ph_library_init_openssl(void)
 {
+#if OPENSSL_VERSION_NUMBER < 0x10100001L
   int i;
 
   mt_dynlock = ph_memtype_register(&dynlock_def);
+#endif
 
   ERR_load_crypto_strings();
   ERR_load_SSL_strings();
   OpenSSL_add_all_algorithms();
   SSL_library_init();
 
+#if OPENSSL_VERSION_NUMBER < 0x10100001L
   crypto_locks = calloc(CRYPTO_num_locks(), sizeof(*crypto_locks));
   for (i = 0; i < CRYPTO_num_locks(); i++) {
     crypto_locks[i] = crypto_dynlock_new(__FILE__, __LINE__);
@@ -110,6 +115,7 @@ void ph_library_init_openssl(void)
   CRYPTO_set_dynlock_create_callback(crypto_dynlock_new);
   CRYPTO_set_dynlock_lock_callback(crypto_dynlock_lock);
   CRYPTO_set_dynlock_destroy_callback(crypto_dynlock_free);
+#endif
 }
 
 
