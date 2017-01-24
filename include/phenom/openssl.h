@@ -40,7 +40,6 @@ extern "C" {
 #define BIO_get_init(x)                  (x->init)
 #define BIO_set_init(x, v)               (x->init = v)
 #define BIO_set_flags(x, v)              (x->flags = v)
-#define BIO_get_flags(x)                 (x->flags)
 #define BIO_get_data(x)                  (x->ptr)
 #define BIO_set_data(x, v)               (x->ptr = v)
 #define BIO_set_shutdown(x, v)           (x->shutdown = v)
