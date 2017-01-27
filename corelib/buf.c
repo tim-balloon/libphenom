@@ -648,19 +648,12 @@ static uint64_t find_record(ph_bufq_t *q, const char *delim, uint32_t delim_len,
     slen = partial_match(ent, delim, delim_len);
     if (slen) {
       uint32_t dlen = delim_len - slen;
+      uint32_t nlen = next->wpos - next->rpos;
       bstart = ph_buf_mem(next->buf) + next->rpos;
 
-      if (len < slen) {
-        // Not found, nor findable.
-        // Consider this case:
-        // |8192|1|8192|
-        // Where the numbers represent ents pointing to buffers of the indicated
-        // size.  If our delimiter len is 3, and the delimiter straddles three
-        // entries, we won't ever find it.
-        // We don't construct such a sequence today, but if we were to allow a
-        // "zero copy" interface where buffers could be directly chained in,
-        // this is something that might come up.
-        // Whoever adds that can solve that.
+      if (nlen < slen) {
+	// Not found and the data available in the next buffer are not
+	// sufficient to match the suffix
         return 0;
       }
 
@@ -784,7 +777,9 @@ bool ph_bufq_stm_write(ph_bufq_t *q, ph_stream_t *stm, uint64_t *nwrotep)
   }
 
   if (nio == 0) {
-    *nwrotep = 0;
+    if (nwrotep) {
+	*nwrotep = 0;
+    }
     return true;
   }
 
