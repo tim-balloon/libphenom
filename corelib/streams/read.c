@@ -132,7 +132,12 @@ bool ph_stm_read(ph_stream_t *stm, void *buf, uint64_t count, uint64_t *nread)
         // partial success; fall out and report what we read
         break;
       }
-      errno = ph_stm_errno(stm);
+
+      if (!(errno = ph_stm_errno(stm))) {
+	// Not an error, but no data to read
+	break;
+      }
+
       ph_stm_unlock(stm);
       return false;
     }
