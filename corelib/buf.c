@@ -817,7 +817,7 @@ bool ph_bufq_stm_write(ph_bufq_t *q, ph_stream_t *stm, uint64_t *nwrotep)
 bool ph_bufq_stm_read(ph_bufq_t *q, ph_stream_t *stm, uint64_t *nreadp)
 {
   struct ph_bufq_ent *last;
-  uint64_t avail = 0, nread;
+  uint64_t avail = 0, nread = 0;
   bool res;
 
   last = PH_STAILQ_LAST(&q->fifo, ph_bufq_ent, ent);
