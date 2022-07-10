@@ -341,7 +341,7 @@ CFLAGS="$CFLAGS -g -gdwarf-2"
 
 IRONMANCFLAGS=""
 if test -n "$GCC" -a "$lenient" == "no" ; then
-  IRONMANCFLAGS="-Werror"
+  IRONMANCFLAGS="-Wall"
 fi
 AC_SUBST(IRONMANCFLAGS)
 
