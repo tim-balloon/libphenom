@@ -349,6 +349,7 @@ int ph_serial_set_baud_base(ph_serial_t *m_serial, int m_base) {
         return -1;
     }
 
+    ss.flags = (ss.flags & ~ASYNC_SPD_MASK) | ASYNC_SPD_CUST;
     ss.baud_base = m_base;
 
     if (ioctl(m_serial->job.fd, TIOCSSERIAL, &ss)) {
